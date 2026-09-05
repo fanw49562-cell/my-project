@@ -3,16 +3,13 @@
   "name": "my-project",
   "compatibility_date": "2026-09-05",
   "main": "src/index.js",
+  "workers_dev": true,
   "assets": {
     "directory": "./public",
     "not_found_handling": "single-page-application",
     "binding": "ASSETS",
     "run_worker_first": ["/api/*"]
   },
-  "routes": [
-    { "pattern": "fanw.org", "custom_domain": true },
-    { "pattern": "www.fanw.org", "custom_domain": true }
-  ],
   "d1_databases": [
     {
       "binding": "DB",
@@ -26,5 +23,29 @@
       "binding": "PHOTOS",
       "id": "c36c674835f84ca8bd879a7042dd90db"
     }
-  ]
+  ],
+  "env": {
+    "production": {
+      "name": "my-project-prod",
+      "workers_dev": false,
+      "routes": [
+        { "pattern": "fanw.org", "custom_domain": true },
+        { "pattern": "www.fanw.org", "custom_domain": true }
+      ],
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "daily-notes",
+          "database_id": "abd14692-5bc8-43c7-909c-41b37e2f41e4",
+          "migrations_dir": "migrations"
+        }
+      ],
+      "kv_namespaces": [
+        {
+          "binding": "PHOTOS",
+          "id": "c36c674835f84ca8bd879a7042dd90db"
+        }
+      ]
+    }
+  }
 }
