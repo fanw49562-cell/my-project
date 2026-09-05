@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>边缘上线</title>
+    <title>今日一句</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231a1410'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23ff6a3d'/%3E%3C/svg%3E" />
     <style>
       :root {
@@ -12,14 +12,12 @@
         --muted: #b8a99a;
         --accent: #ff6a3d;
         --line: rgba(244, 236, 228, 0.12);
+        --card: rgba(42, 34, 28, 0.72);
       }
 
-      * {
-        box-sizing: border-box;
-      }
+      * { box-sizing: border-box; }
 
-      html,
-      body {
+      html, body {
         margin: 0;
         min-height: 100%;
       }
@@ -36,16 +34,19 @@
       main {
         min-height: 100vh;
         display: grid;
-        place-items: center;
-        padding: 32px 20px;
+        place-items: start center;
+        padding: 32px 20px 64px;
+      }
+
+      .wrap {
+        width: min(640px, 100%);
       }
 
       .card {
-        width: min(560px, 100%);
-        padding: 36px 32px 28px;
+        padding: 32px 28px 24px;
         border: 1px solid var(--line);
         border-radius: 28px;
-        background: rgba(42, 34, 28, 0.72);
+        background: var(--card);
         backdrop-filter: blur(16px);
         box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
       }
@@ -54,7 +55,7 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        margin-bottom: 22px;
+        margin-bottom: 18px;
         color: var(--muted);
         font-size: 13px;
         letter-spacing: 0.08em;
@@ -71,109 +72,453 @@
       }
 
       h1 {
-        margin: 0 0 10px;
+        margin: 0 0 8px;
         font-family: Georgia, "Songti SC", "Noto Serif SC", serif;
-        font-size: clamp(36px, 8vw, 52px);
+        font-size: clamp(32px, 7vw, 48px);
         font-weight: 600;
-        letter-spacing: 0.02em;
       }
 
-      .lead {
-        margin: 0 0 28px;
+      .lead, .hint, .count, .date, .status-msg {
         color: var(--muted);
         line-height: 1.7;
-        font-size: 16px;
       }
 
-      button {
+      .lead { margin: 0 0 22px; }
+
+      .date {
+        margin: 0 0 14px;
+        font-size: 14px;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 120px;
+        resize: vertical;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 14px 16px;
+        background: rgba(26, 20, 16, 0.55);
+        color: var(--ink);
+        font: inherit;
+        line-height: 1.7;
+      }
+
+      textarea:focus {
+        outline: 2px solid rgba(255, 106, 61, 0.45);
+        outline-offset: 1px;
+      }
+
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        margin-top: 14px;
+      }
+
+      button, .file-btn {
         appearance: none;
         border: 0;
         border-radius: 999px;
-        padding: 12px 20px;
-        background: var(--accent);
-        color: #1a1410;
+        padding: 11px 18px;
         font: inherit;
         font-weight: 600;
         cursor: pointer;
       }
 
-      button:hover {
-        filter: brightness(1.06);
+      button.primary, .file-btn {
+        background: var(--accent);
+        color: #1a1410;
       }
+
+      button.ghost {
+        background: transparent;
+        color: var(--ink);
+        border: 1px solid var(--line);
+      }
+
+      button:hover, .file-btn:hover { filter: brightness(1.06); }
 
       button:disabled {
         opacity: 0.65;
         cursor: wait;
       }
 
-      .result {
-        margin-top: 22px;
-        padding-top: 18px;
-        border-top: 1px solid var(--line);
-        color: var(--muted);
+      .file-btn input {
+        display: none;
+      }
+
+      .count { margin-left: auto; font-size: 13px; }
+
+      .photo-box {
+        margin-top: 18px;
+        display: none;
+      }
+
+      .photo-box.show { display: block; }
+
+      .photo-box img {
+        display: block;
+        width: 100%;
+        max-height: 360px;
+        object-fit: cover;
+        border-radius: 18px;
+        border: 1px solid var(--line);
+      }
+
+      .status-msg {
+        min-height: 1.5em;
+        margin: 12px 0 0;
         font-size: 14px;
-        line-height: 1.8;
-        min-height: 4.5em;
       }
 
-      .result strong {
+      .status-msg.error { color: #ffb4a2; }
+
+      .gate-form {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .gate-form input {
+        flex: 1;
+        min-width: 180px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 12px 16px;
+        background: rgba(26, 20, 16, 0.55);
         color: var(--ink);
-        font-weight: 600;
+        font: inherit;
       }
 
-      .error {
-        color: #ffb4a2;
+      .history {
+        margin-top: 28px;
+      }
+
+      .history h2 {
+        margin: 0 0 14px;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--muted);
+      }
+
+      .entry {
+        display: grid;
+        grid-template-columns: 88px 1fr;
+        gap: 14px;
+        padding: 14px 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .entry img, .entry .no-photo {
+        width: 88px;
+        height: 88px;
+        border-radius: 16px;
+        object-fit: cover;
+        border: 1px solid var(--line);
+      }
+
+      .entry .no-photo {
+        display: grid;
+        place-items: center;
+        color: var(--muted);
+        font-size: 12px;
+        background: rgba(26, 20, 16, 0.45);
+      }
+
+      .entry .meta {
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 6px;
+      }
+
+      .entry p {
+        margin: 0;
+        line-height: 1.7;
+        white-space: pre-wrap;
+      }
+
+      .empty {
+        color: var(--muted);
+        padding: 8px 0 0;
+      }
+
+      .hidden { display: none !important; }
+
+      .top-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 10px;
       }
 
       @keyframes pulse {
-        0% {
-          box-shadow: 0 0 0 0 rgba(126, 200, 163, 0.35);
-        }
-        100% {
-          box-shadow: 0 0 0 12px rgba(126, 200, 163, 0);
-        }
+        0% { box-shadow: 0 0 0 0 rgba(126, 200, 163, 0.35); }
+        100% { box-shadow: 0 0 0 12px rgba(126, 200, 163, 0); }
+      }
+
+      @media (max-width: 520px) {
+        .entry { grid-template-columns: 72px 1fr; }
+        .entry img, .entry .no-photo { width: 72px; height: 72px; }
       }
     </style>
   </head>
   <body>
     <main>
-      <section class="card">
-        <div class="status"><span class="dot"></span> Cloudflare 已上线</div>
-        <h1>边缘上线</h1>
-        <p class="lead">这是一个发布在 Cloudflare 上的小站点。点一下按钮，看看请求打到了哪座边缘节点。</p>
-        <button id="ping" type="button">探测节点</button>
-        <div class="result" id="result">还没有探测。点按钮后会显示节点、城市和时间。</div>
-      </section>
+      <div class="wrap">
+        <section class="card" id="gate">
+          <div class="status"><span class="dot"></span> 私人日记</div>
+          <h1>今日一句</h1>
+          <p class="lead">每天留下最想说的一句话，或者一张照片。输入访问码后开始记录。</p>
+          <form class="gate-form" id="login-form">
+            <input id="code" type="password" name="code" autocomplete="current-password" placeholder="访问码" />
+            <button class="primary" type="submit">进入</button>
+          </form>
+          <p class="status-msg" id="gate-msg"></p>
+        </section>
+
+        <section id="app" class="hidden">
+          <div class="top-actions">
+            <button class="ghost" id="logout" type="button">离开</button>
+          </div>
+          <section class="card">
+            <div class="status"><span class="dot"></span> 今天记下</div>
+            <h1>今日一句</h1>
+            <p class="date" id="today-label"></p>
+            <p class="lead">一句话、一张照片，或者两个都留。每天只会保存这一条。</p>
+            <textarea id="sentence" maxlength="500" placeholder="今天最想说的一句话…"></textarea>
+            <div class="row">
+              <button class="primary" id="save" type="button">保存这句话</button>
+              <label class="file-btn">
+                选一张照片
+                <input id="photo" type="file" accept="image/jpeg,image/png,image/webp,image/gif" />
+              </label>
+              <label class="file-btn">
+                拍一张
+                <input id="camera" type="file" accept="image/*" capture="environment" />
+              </label>
+              <button class="ghost hidden" id="remove-photo" type="button">去掉照片</button>
+              <span class="count" id="count">0 / 500</span>
+            </div>
+            <div class="photo-box" id="photo-box">
+              <img id="preview" alt="今天的照片" />
+            </div>
+            <p class="status-msg" id="app-msg"></p>
+          </section>
+          <section class="history">
+            <h2>以前记下的</h2>
+            <div id="history"></div>
+          </section>
+        </section>
+      </div>
     </main>
     <script>
-      const button = document.getElementById("ping");
-      const result = document.getElementById("result");
+      const gate = document.getElementById("gate");
+      const app = document.getElementById("app");
+      const sentence = document.getElementById("sentence");
+      const count = document.getElementById("count");
+      const preview = document.getElementById("preview");
+      const photoBox = document.getElementById("photo-box");
+      const removePhoto = document.getElementById("remove-photo");
+      const gateMsg = document.getElementById("gate-msg");
+      const appMsg = document.getElementById("app-msg");
+      const history = document.getElementById("history");
+      const todayLabel = document.getElementById("today-label");
 
-      button.addEventListener("click", async () => {
+      const jsonHeaders = { "Content-Type": "application/json" };
+
+      function setMsg(el, text, isError) {
+        el.textContent = text || "";
+        el.classList.toggle("error", Boolean(isError));
+      }
+
+      function formatDay(day) {
+        return new Date(day + "T12:00:00+08:00").toLocaleDateString("zh-CN", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          timeZone: "Asia/Shanghai",
+        });
+      }
+
+      function updateCount() {
+        count.textContent = sentence.value.length + " / 500";
+      }
+
+      async function api(url, options) {
+        const response = await fetch(url, { credentials: "same-origin", ...options });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          const error = new Error(data.error || "请求失败");
+          error.status = response.status;
+          throw error;
+        }
+        return data;
+      }
+
+      function render(state) {
+        todayLabel.textContent = formatDay(state.day);
+        sentence.value = state.today?.sentence || "";
+        updateCount();
+
+        if (state.today?.hasPhoto) {
+          preview.src = "/api/photo/" + state.day + "?t=" + Date.now();
+          photoBox.classList.add("show");
+          removePhoto.classList.remove("hidden");
+        } else {
+          preview.removeAttribute("src");
+          photoBox.classList.remove("show");
+          removePhoto.classList.add("hidden");
+        }
+
+        history.replaceChildren();
+        const rows = state.entries || [];
+        if (!rows.length) {
+          const empty = document.createElement("p");
+          empty.className = "empty";
+          empty.textContent = "还没有记录。从今天开始吧。";
+          history.append(empty);
+          return;
+        }
+
+        for (const entry of rows) {
+          const item = document.createElement("article");
+          item.className = "entry";
+
+          if (entry.hasPhoto) {
+            const img = document.createElement("img");
+            img.alt = entry.day + " 的照片";
+            img.src = "/api/photo/" + entry.day;
+            item.append(img);
+          } else {
+            const placeholder = document.createElement("div");
+            placeholder.className = "no-photo";
+            placeholder.textContent = "无照片";
+            item.append(placeholder);
+          }
+
+          const body = document.createElement("div");
+          const meta = document.createElement("div");
+          meta.className = "meta";
+          meta.textContent = formatDay(entry.day);
+          const text = document.createElement("p");
+          text.textContent = entry.sentence || "这一天只留了照片。";
+          body.append(meta, text);
+          item.append(body);
+          history.append(item);
+        }
+      }
+
+      async function loadState() {
+        const state = await api("/api/state");
+        gate.classList.add("hidden");
+        app.classList.remove("hidden");
+        render(state);
+        return state;
+      }
+
+      async function compressImage(file) {
+        if (!file.type.startsWith("image/") || file.type === "image/gif") return file;
+        const bitmap = await createImageBitmap(file);
+        const max = 1600;
+        const scale = Math.min(1, max / Math.max(bitmap.width, bitmap.height));
+        if (scale === 1 && file.size < 1024 * 1024) return file;
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(bitmap.width * scale);
+        canvas.height = Math.round(bitmap.height * scale);
+        canvas.getContext("2d").drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+        const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.85));
+        return blob || file;
+      }
+
+      async function uploadPhoto(file) {
+        setMsg(appMsg, "正在保存照片…");
+        const prepared = await compressImage(file);
+        const form = new FormData();
+        form.append("file", prepared, file.name || "photo.jpg");
+        const state = await api("/api/photo", { method: "POST", body: form });
+        render(state);
+        setMsg(appMsg, "照片已记下。");
+      }
+
+      document.getElementById("login-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const button = event.target.querySelector("button");
         button.disabled = true;
-        result.textContent = "正在探测边缘节点…";
-        result.classList.remove("error");
-
+        setMsg(gateMsg, "");
         try {
-          const response = await fetch("/api/hello");
-          if (!response.ok) throw new Error("接口返回 " + response.status);
-          const data = await response.json();
-          const where = [data.city, data.country].filter(Boolean).join(" · ") || "未知位置";
-          result.innerHTML =
-            "<strong>" +
-            data.message +
-            "</strong><br>节点 " +
-            data.colo +
-            " · " +
-            where +
-            "<br>" +
-            new Date(data.time).toLocaleString("zh-CN", { hour12: false });
+          await api("/api/login", {
+            method: "POST",
+            headers: jsonHeaders,
+            body: JSON.stringify({ code: document.getElementById("code").value }),
+          });
+          await loadState();
         } catch (error) {
-          result.classList.add("error");
-          result.textContent = "探测失败：" + error.message;
+          setMsg(gateMsg, error.message, true);
         } finally {
           button.disabled = false;
         }
+      });
+
+      document.getElementById("save").addEventListener("click", async () => {
+        const button = document.getElementById("save");
+        button.disabled = true;
+        setMsg(appMsg, "正在保存…");
+        try {
+          const state = await api("/api/sentence", {
+            method: "PUT",
+            headers: jsonHeaders,
+            body: JSON.stringify({ sentence: sentence.value }),
+          });
+          render(state);
+          setMsg(appMsg, "这句话已记下。");
+        } catch (error) {
+          setMsg(appMsg, error.message, true);
+        } finally {
+          button.disabled = false;
+        }
+      });
+
+      async function onPick(event) {
+        const file = event.target.files && event.target.files[0];
+        event.target.value = "";
+        if (!file) return;
+        try {
+          await uploadPhoto(file);
+        } catch (error) {
+          setMsg(appMsg, error.message, true);
+        }
+      }
+
+      document.getElementById("photo").addEventListener("change", onPick);
+      document.getElementById("camera").addEventListener("change", onPick);
+
+      removePhoto.addEventListener("click", async () => {
+        removePhoto.disabled = true;
+        try {
+          const state = await api("/api/photo", { method: "DELETE" });
+          render(state);
+          setMsg(appMsg, "今天的照片已去掉。");
+        } catch (error) {
+          setMsg(appMsg, error.message, true);
+        } finally {
+          removePhoto.disabled = false;
+        }
+      });
+
+      document.getElementById("logout").addEventListener("click", async () => {
+        await api("/api/logout", { method: "POST" });
+        app.classList.add("hidden");
+        gate.classList.remove("hidden");
+        document.getElementById("code").value = "";
+        setMsg(gateMsg, "");
+      });
+
+      sentence.addEventListener("input", updateCount);
+      updateCount();
+
+      loadState().catch((error) => {
+        if (error.status !== 401) setMsg(gateMsg, error.message, true);
       });
     </script>
   </body>

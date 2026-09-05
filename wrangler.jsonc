@@ -8,5 +8,19 @@
     "not_found_handling": "single-page-application",
     "binding": "ASSETS",
     "run_worker_first": ["/api/*"]
-  }
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "daily-notes",
+      "database_id": "abd14692-5bc8-43c7-909c-41b37e2f41e4",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "PHOTOS",
+      "id": "c36c674835f84ca8bd879a7042dd90db"
+    }
+  ]
 }
