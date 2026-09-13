@@ -10,6 +10,7 @@ export const WORDS = [
     contextKind: "news",
     contextTitle: "市场简报",
     contextBody: "The treasurer said overnight liquidity remained adequate, even as credit spreads widened.",
+    contextZh: "司库表示隔夜流动性仍然充足，尽管信用利差已经走阔。",
   },
   {
     id: "amortization",
@@ -22,6 +23,7 @@ export const WORDS = [
     contextKind: "story",
     contextTitle: "关账夜",
     contextBody: "Before midnight, she double-checked the amortization schedule so the software license would not hit one quarter all at once.",
+    contextZh: "午夜前，她又核对了一遍摊销表，以免软件许可费一次性全部计入某个季度。",
   },
   {
     id: "accrual",
@@ -34,6 +36,7 @@ export const WORDS = [
     contextKind: "news",
     contextTitle: "审计备忘",
     contextBody: "The audit team asked why bonus accrual was booked in December when the board vote was still pending.",
+    contextZh: "审计组问，董事会尚未表决，为什么十二月就计提了奖金应计。",
   },
   {
     id: "covenant",
@@ -46,6 +49,7 @@ export const WORDS = [
     contextKind: "speech",
     contextTitle: "信贷例会",
     contextBody: "If we miss the interest coverage covenant, the bank can reprice the facility within ten business days.",
+    contextZh: "如果我们达不到利息覆盖率契约，银行可以在十个工作日内重定价这笔授信。",
   },
   {
     id: "hedge",
@@ -58,6 +62,7 @@ export const WORDS = [
     contextKind: "news",
     contextTitle: "外汇窗口",
     contextBody: "The company hedged next year's dollar receivables after the currency swung four percent in a week.",
+    contextZh: "汇率一周波动了四个百分点后，公司对冲了明年的美元应收账款。",
   },
   {
     id: "working-capital",
@@ -70,6 +75,7 @@ export const WORDS = [
     contextKind: "story",
     contextTitle: "供应紧张",
     contextBody: "Inventory piled up, and working capital tightened even though sales looked healthy on paper.",
+    contextZh: "库存堆了起来，账面上销售看起来不错，营运资本却更紧了。",
   },
   {
     id: "ebitda",
@@ -82,6 +88,7 @@ export const WORDS = [
     contextKind: "speech",
     contextTitle: "业绩会",
     contextBody: "We guided EBITDA margin up one point, but warned that amortization of new licenses will still hit net income.",
+    contextZh: "我们把 EBITDA 利润率指引上调了一个点，但也提醒新许可的摊销仍会冲击净利润。",
   },
   {
     id: "impairment",
@@ -94,6 +101,7 @@ export const WORDS = [
     contextKind: "news",
     contextTitle: "年报摘录",
     contextBody: "Goodwill impairment of eighty million followed a weaker outlook in the payments segment.",
+    contextZh: "支付业务前景转弱后，公司确认了八千万的商誉减值。",
   },
   {
     id: "leverage",
@@ -106,6 +114,7 @@ export const WORDS = [
     contextKind: "speech",
     contextTitle: "董事会",
     contextBody: "The CFO argued we should not add leverage just to hit a buyback target this quarter.",
+    contextZh: "财务总监认为，不应只为了完成这季度回购目标而去加杠杆。",
   },
   {
     id: "provision",
@@ -118,6 +127,7 @@ export const WORDS = [
     contextKind: "story",
     contextTitle: "风控晨会",
     contextBody: "After two large clients delayed payment, she increased the provision rather than waiting for year end.",
+    contextZh: "两个大客户推迟付款后，她提高了拨备，而不是等到年底。",
   },
   {
     id: "yield",
@@ -130,6 +140,7 @@ export const WORDS = [
     contextKind: "news",
     contextTitle: "债市收盘",
     contextBody: "Ten-year yields slipped after the data print, and swap desks reopened hedges into the close.",
+    contextZh: "数据公布后十年期收益率回落，互换台在收盘前重新开了对冲。",
   },
   {
     id: "collateral",
@@ -142,6 +153,7 @@ export const WORDS = [
     contextKind: "speech",
     contextTitle: "银团谈判",
     contextBody: "The lenders wanted extra collateral on receivables before they would extend the revolving line.",
+    contextZh: "出借人要求对应收账款追加抵押，才肯展期循环额度。",
   },
   {
     id: "capex",
@@ -154,6 +166,7 @@ export const WORDS = [
     contextKind: "news",
     contextTitle: "投资计划",
     contextBody: "Cloud migration will lift this year's capex, but the CFO expects opex to fall from year two.",
+    contextZh: "上云会抬高今年资本支出，但财务总监预计经营费用从第二年起下降。",
   },
   {
     id: "fair-value",
@@ -166,6 +179,7 @@ export const WORDS = [
     contextKind: "story",
     contextTitle: "估值争论",
     contextBody: "Without an active market, they had to defend the fair value of the unlisted stake with a model.",
+    contextZh: "没有活跃市场，他们只能用模型为未上市股权的公允价值辩护。",
   },
   {
     id: "reconciliation",
@@ -178,6 +192,7 @@ export const WORDS = [
     contextKind: "story",
     contextTitle: "月末",
     contextBody: "The bank reconciliation still showed a twenty-thousand gap, so they froze the close checklist.",
+    contextZh: "银行对账仍差两万，所以他们冻结了关账清单。",
   },
   {
     id: "deferred-revenue",
@@ -190,6 +205,7 @@ export const WORDS = [
     contextKind: "news",
     contextTitle: "SaaS 财报",
     contextBody: "Annual billings rose, but deferred revenue grew faster because multi-year contracts were prepaid.",
+    contextZh: "年账单增加了，但递延收入涨得更快，因为多年合同是预付的。",
   },
   {
     id: "materiality",
@@ -202,6 +218,7 @@ export const WORDS = [
     contextKind: "speech",
     contextTitle: "审计沟通",
     contextBody: "The adjustment was below materiality, yet the audit partner still wanted it booked for governance.",
+    contextZh: "调整额低于重要性水平，但审计合伙人为了治理仍要求入账。",
   },
   {
     id: "going-concern",
@@ -214,6 +231,7 @@ export const WORDS = [
     contextKind: "news",
     contextTitle: "年审",
     contextBody: "Cash burn triggered a going concern discussion, even though the new facility was almost signed.",
+    contextZh: "现金消耗引发了持续经营讨论，尽管新授信几乎已经签好。",
   },
   {
     id: "spread",
@@ -226,6 +244,7 @@ export const WORDS = [
     contextKind: "news",
     contextTitle: "信用市场",
     contextBody: "Investment-grade spreads tightened, while high-yield names still paid for liquidity.",
+    contextZh: "投资级利差收窄，高收益品种仍在为流动性付溢价。",
   },
   {
     id: "rollover",
@@ -238,6 +257,7 @@ export const WORDS = [
     contextKind: "speech",
     contextTitle: "司库会",
     contextBody: "We should not assume an automatic rollover; two lenders already asked for tighter terms.",
+    contextZh: "我们不能默认会自动展期；已经有两家银行要求更严的条款。",
   },
   {
     id: "interoperability",
@@ -250,6 +270,7 @@ export const WORDS = [
     contextKind: "speech",
     contextTitle: "架构评审",
     contextBody: "Without interoperability, the finance close still needed three manual exports every month.",
+    contextZh: "没有互操作性，财务关账每个月仍要三次手工导出。",
   },
   {
     id: "middleware",
@@ -262,6 +283,7 @@ export const WORDS = [
     contextKind: "story",
     contextTitle: "接口事故",
     contextBody: "When middleware queued invoices twice, accounts payable posted duplicate bills before anyone noticed.",
+    contextZh: "中间件把发票排了两遍队，应付账款在有人发现前就入了重复账单。",
   },
   {
     id: "api-gateway",
@@ -274,6 +296,7 @@ export const WORDS = [
     contextKind: "news",
     contextTitle: "平台升级",
     contextBody: "The new API gateway throttled partner traffic during month-end, which delayed bank-file uploads.",
+    contextZh: "新 API 网关在月末限流了合作方流量，耽误了银行文件上传。",
   },
   {
     id: "idempotent",
@@ -286,6 +309,7 @@ export const WORDS = [
     contextKind: "story",
     contextTitle: "支付重试",
     contextBody: "Because the payout API was not idempotent, a timeout plus a retry created two transfers.",
+    contextZh: "因为付款接口不是幂等的，超时后再试产生了两笔转账。",
   },
   {
     id: "latency",
@@ -298,6 +322,7 @@ export const WORDS = [
     contextKind: "news",
     contextTitle: "交易系统",
     contextBody: "Matching-engine latency jumped at the open, and some quotes were stale for several milliseconds.",
+    contextZh: "开盘时撮合引擎延迟跳升，部分报价有几毫秒是旧的。",
   },
   {
     id: "schema",
@@ -310,6 +335,7 @@ export const WORDS = [
     contextKind: "story",
     contextTitle: "主数据",
     contextBody: "A silent schema change on vendor_id broke the reconciliation job that finance trusted each night.",
+    contextZh: "vendor_id 上一次无声的结构变更，弄坏了财务每晚信赖的对账作业。",
   },
   {
     id: "orchestration",
@@ -322,6 +348,7 @@ export const WORDS = [
     contextKind: "speech",
     contextTitle: "数字化例会",
     contextBody: "Close orchestration now waits for tax, treasury, and revenue systems before it marks a period locked.",
+    contextZh: "关账编排现在会等税务、司库和收入系统就绪，才把期间标为锁定。",
   },
   {
     id: "provenance",
@@ -334,6 +361,7 @@ export const WORDS = [
     contextKind: "news",
     contextTitle: "监管问询",
     contextBody: "Regulators asked for provenance of the risk numbers, not just the final dashboard screenshot.",
+    contextZh: "监管要的是风险数字的出处，而不只是仪表盘最后一张截图。",
   },
   {
     id: "canonical",
@@ -346,6 +374,7 @@ export const WORDS = [
     contextKind: "speech",
     contextTitle: "主数据治理",
     contextBody: "Customer is canonical in CRM; ERP must subscribe, not invent a second customer number.",
+    contextZh: "客户以 CRM 为权威；ERP 应当订阅，而不是再发明一套客户编号。",
   },
   {
     id: "lineage",
@@ -358,6 +387,7 @@ export const WORDS = [
     contextKind: "story",
     contextTitle: "指标对不上",
     contextBody: "They mapped lineage from the general ledger to the board pack and found a forgotten filter.",
+    contextZh: "他们把总账到董事会材料的血缘画出来，发现了一个被遗忘的筛选条件。",
   },
   {
     id: "tokenization",
@@ -365,11 +395,12 @@ export const WORDS = [
     phonetic: "/ˌtoʊkənaɪˈzeɪʃn/",
     pos: "n.",
     topic: "informatization",
-    meaning: "令牌化：用令牌替换敏感数据，降低泄露面。",
+    meaning: "令牌化：用令牌替换敏感数据，降低暴露面。",
     grammar: "tokenize card data。也用于 NLP 分词，这里取财务信息化义。",
     contextKind: "news",
     contextTitle: "支付合规",
     contextBody: "After tokenization, the data lake no longer stored raw PAN, which simplified the audit scope.",
+    contextZh: "令牌化之后，数据湖不再存原始卡号，审计范围也简化了。",
   },
   {
     id: "zero-trust",
@@ -382,6 +413,7 @@ export const WORDS = [
     contextKind: "speech",
     contextTitle: "安全委员会",
     contextBody: "Zero trust means the close robot cannot pull the ledger just because it sits on the same VPN.",
+    contextZh: "零信任意味着关账机器人不能只因为在同一 VPN 上就去拉总账。",
   },
   {
     id: "observability",
@@ -394,6 +426,7 @@ export const WORDS = [
     contextKind: "story",
     contextTitle: "夜间批处理",
     contextBody: "Better observability showed the ETL stalling on one vendor file, hours before the close team arrived.",
+    contextZh: "更好的可观测性显示 ETL 卡在一个供应商文件上，比关账团队上班早了几个小时。",
   },
   {
     id: "backfill",
@@ -406,6 +439,7 @@ export const WORDS = [
     contextKind: "news",
     contextTitle: "数据迁移",
     contextBody: "The warehouse backfill of invoices took a weekend, and tax reports had to wait until Monday.",
+    contextZh: "数仓回填发票花了一个周末，税务报表只能等到周一。",
   },
   {
     id: "sla",
@@ -418,6 +452,7 @@ export const WORDS = [
     contextKind: "speech",
     contextTitle: "供应商管理",
     contextBody: "If the bank-file SLA slips past 9 a.m., payroll and vendor payments both miss the window.",
+    contextZh: "如果银行文件的 SLA 拖过上午九点，工资和供应商付款都会错过窗口。",
   },
   {
     id: "failover",
@@ -430,6 +465,7 @@ export const WORDS = [
     contextKind: "story",
     contextTitle: "演练",
     contextBody: "During failover, the payment gateway stayed up, but the reporting replica lagged by twelve minutes.",
+    contextZh: "故障切换时支付网关还在，但报表副本落后了十二分钟。",
   },
   {
     id: "rbac",
@@ -442,6 +478,7 @@ export const WORDS = [
     contextKind: "news",
     contextTitle: "内控",
     contextBody: "RBAC stopped junior analysts from posting journals, which the auditors had flagged last year.",
+    contextZh: "基于角色的访问控制拦住了初级分析师过账，这正是审计去年指出的问题。",
   },
   {
     id: "event-driven",
@@ -454,6 +491,7 @@ export const WORDS = [
     contextKind: "speech",
     contextTitle: "中台规划",
     contextBody: "An event-driven ledger update can post cash the moment the bank confirms, not at tonight's batch.",
+    contextZh: "事件驱动的总账更新可以在银行确认的瞬间入账，而不必等到今晚的批处理。",
   },
   {
     id: "data-mart",
@@ -466,6 +504,7 @@ export const WORDS = [
     contextKind: "story",
     contextTitle: "自助分析",
     contextBody: "The FP&A data mart finally matched the ledger, so weekend spreadsheet merges became rare.",
+    contextZh: "FP&A 数据集市终于和总账对上了，周末拼表变得很少。",
   },
   {
     id: "encryption-at-rest",
@@ -478,6 +517,7 @@ export const WORDS = [
     contextKind: "news",
     contextTitle: "云合规",
     contextBody: "Encryption at rest was enabled on the archive bucket before payroll files were moved off the file share.",
+    contextZh: "工资文件从共享盘迁走前，归档桶已开启静态加密。",
   },
   {
     id: "throughput",
@@ -490,6 +530,7 @@ export const WORDS = [
     contextKind: "speech",
     contextTitle: "容量规划",
     contextBody: "Month-end throughput on the invoice API must double, or AP clerks will wait on a spinner again.",
+    contextZh: "月末发票接口的吞吐量必须翻倍，否则应付会计又要盯着转圈。",
   },
   {
     id: "single-source-of-truth",
@@ -502,6 +543,7 @@ export const WORDS = [
     contextKind: "speech",
     contextTitle: "经营分析会",
     contextBody: "Revenue has one single source of truth in billing; marketing dashboards must not calculate their own.",
+    contextZh: "收入以计费系统为单一事实来源；营销看板不得自己另算一套。",
   },
   {
     id: "change-management",
@@ -514,6 +556,7 @@ export const WORDS = [
     contextKind: "story",
     contextTitle: "热修",
     contextBody: "They skipped change management to fix a close job, then spent Friday proving what had been released.",
+    contextZh: "他们跳过变更管理去修关账作业，然后周五花了一天证明到底发了什么。",
   },
   {
     id: "kpi",
@@ -526,6 +569,7 @@ export const WORDS = [
     contextKind: "news",
     contextTitle: "经营月报",
     contextBody: "Cash conversion cycle became a board KPI after working capital slipped two quarters in a row.",
+    contextZh: "营运资本连续两个季度走弱后，现金周转周期成了董事会的 KPI。",
   },
   {
     id: "runway",
@@ -538,6 +582,7 @@ export const WORDS = [
     contextKind: "speech",
     contextTitle: "融资准备",
     contextBody: "With current burn, runway is fourteen months, unless collections on enterprise deals improve.",
+    contextZh: "按当前消耗，现金跑道是十四个月，除非大客户回款改善。",
   },
   {
     id: "soxd",
@@ -550,6 +595,7 @@ export const WORDS = [
     contextKind: "news",
     contextTitle: "内控测试",
     contextBody: "The SOX walkthrough failed because the journal approver could also post in the same role.",
+    contextZh: "SOX 穿行测试失败，因为凭证审批人还能用同一角色过账。",
   },
   {
     id: "master-data",
@@ -562,6 +608,7 @@ export const WORDS = [
     contextKind: "story",
     contextTitle: "编码冲突",
     contextBody: "Two plants used different vendor master data, so spend reports double-counted the same supplier.",
+    contextZh: "两家工厂用了不同的供应商主数据，支出报表把同一家供应商算了两遍。",
   },
   {
     id: "straight-through-processing",
@@ -574,5 +621,6 @@ export const WORDS = [
     contextKind: "news",
     contextTitle: "结算升级",
     contextBody: "Straight-through processing cut the exception queue, but fat-finger trades still needed a human hold.",
+    contextZh: "直通处理缩短了异常队列，但误操作交易仍需要人工拦截。",
   },
 ];

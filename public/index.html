@@ -306,10 +306,64 @@
         align-items: baseline;
       }
 
-      .word-head strong {
+      .word-head strong,
+      .speak-word {
         font-family: Georgia, "Times New Roman", serif;
         font-size: 28px;
         font-weight: 600;
+        cursor: pointer;
+        border: 0;
+        padding: 0;
+        background: none;
+        color: inherit;
+        text-align: left;
+      }
+
+      .speak-word {
+        border-radius: 4px;
+      }
+
+      .speak-ipa {
+        font-size: 13px;
+        font-weight: 500;
+        padding: 4px 10px;
+        color: var(--muted);
+      }
+
+      .speak-word:hover,
+      .passage.speak:hover,
+      .passage mark:hover {
+        color: var(--accent);
+        filter: none;
+      }
+
+      .passage-wrap {
+        margin-top: 10px;
+        padding: 12px 14px;
+        border-radius: 16px;
+        background: rgba(26, 20, 16, 0.45);
+      }
+
+      .passage.speak {
+        display: block;
+        width: 100%;
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+        padding: 0;
+        font: inherit;
+        font-weight: 400;
+        text-align: left;
+        color: inherit;
+        background: transparent;
+        cursor: pointer;
+      }
+
+      .passage-zh {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.7;
       }
 
       .tag {
@@ -332,10 +386,6 @@
       }
 
       .passage {
-        margin-top: 10px;
-        padding: 12px 14px;
-        border-radius: 16px;
-        background: rgba(26, 20, 16, 0.45);
         line-height: 1.75;
       }
 
@@ -344,6 +394,7 @@
         color: inherit;
         padding: 0 2px;
         border-radius: 4px;
+        cursor: pointer;
       }
 
       .grades {
@@ -395,7 +446,7 @@
             <div class="status"><span class="dot"></span> 遗忘曲线</div>
             <h1>今日单词</h1>
             <p class="date" id="vocab-date"></p>
-            <p class="lead">财务与信息化英文。每天推送新词和到期复习；先每周 20 个，以后可改。</p>
+            <p class="lead">财务与信息化英文。每天推送新词和到期复习。点单词听发音，点语境句子听整句；句子下面有中文翻译。</p>
             <div class="vocab-meta">
               <label>
                 每周新词
@@ -584,6 +635,37 @@
         return topic === "finance" ? "财务" : "信息化";
       }
 
+      function pickEnglishVoice() {
+        const voices = window.speechSynthesis ? speechSynthesis.getVoices() : [];
+        return (
+          voices.find((voice) => /^en(-|_|$)/i.test(voice.lang) && /Google|Microsoft|Samantha|Daniel|Jenny/i.test(voice.name)) ||
+          voices.find((voice) => /^en-US/i.test(voice.lang)) ||
+          voices.find((voice) => /^en/i.test(voice.lang)) ||
+          null
+        );
+      }
+
+      function speakEnglish(text) {
+        const value = String(text || "").trim();
+        if (!value) return;
+        if (!window.speechSynthesis) {
+          setMsg(vocabMsg, "当前浏览器不支持朗读，可换 Chrome 或 Edge。", true);
+          return;
+        }
+        speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(value);
+        utter.lang = "en-US";
+        utter.rate = 0.92;
+        const voice = pickEnglishVoice();
+        if (voice) utter.voice = voice;
+        speechSynthesis.speak(utter);
+      }
+
+      if (window.speechSynthesis) {
+        speechSynthesis.getVoices();
+        speechSynthesis.addEventListener("voiceschanged", pickEnglishVoice);
+      }
+
       function highlight(text, term) {
         const fragment = document.createDocumentFragment();
         const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -592,6 +674,11 @@
           if (part.toLowerCase() === term.toLowerCase()) {
             const mark = document.createElement("mark");
             mark.textContent = part;
+            mark.title = "点击朗读单词";
+            mark.addEventListener("click", (event) => {
+              event.stopPropagation();
+              speakEnglish(term);
+            });
             fragment.append(mark);
           } else {
             fragment.append(part);
@@ -606,10 +693,18 @@
 
         const head = document.createElement("div");
         head.className = "word-head";
-        const title = document.createElement("strong");
+        const title = document.createElement("button");
+        title.type = "button";
+        title.className = "speak-word";
         title.textContent = word.term;
-        const phonetic = document.createElement("span");
-        phonetic.textContent = word.phonetic || "";
+        title.title = "点击朗读单词";
+        title.addEventListener("click", () => speakEnglish(word.term));
+        const phonetic = document.createElement("button");
+        phonetic.type = "button";
+        phonetic.className = "ghost speak-ipa";
+        phonetic.textContent = word.phonetic || "听";
+        phonetic.title = "点击朗读单词";
+        phonetic.addEventListener("click", () => speakEnglish(word.term));
         const pos = document.createElement("span");
         pos.className = "tag";
         pos.textContent = word.pos || "";
@@ -628,11 +723,23 @@
         const context = document.createElement("p");
         context.textContent = kindLabel(word.contextKind) + " · " + (word.contextTitle || "");
 
-        const passage = document.createElement("div");
-        passage.className = "passage";
+        const passageWrap = document.createElement("div");
+        passageWrap.className = "passage-wrap";
+        const passage = document.createElement("button");
+        passage.type = "button";
+        passage.className = "passage speak";
+        passage.title = "点击朗读整句";
         passage.append(highlight(word.contextBody || "", word.term));
+        passage.addEventListener("click", () => speakEnglish(word.contextBody));
+        passageWrap.append(passage);
+        if (word.contextZh) {
+          const zh = document.createElement("p");
+          zh.className = "passage-zh";
+          zh.textContent = word.contextZh;
+          passageWrap.append(zh);
+        }
 
-        card.append(head, meaning, grammar, context, passage);
+        card.append(head, meaning, grammar, context, passageWrap);
 
         if (!word.done) {
           const grades = document.createElement("div");

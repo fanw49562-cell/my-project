@@ -21,6 +21,7 @@ export async function ensureVocab(db) {
         context_kind TEXT,
         context_title TEXT,
         context_body TEXT,
+        context_zh TEXT,
         topic TEXT
       )`
     )
@@ -39,6 +40,12 @@ export async function ensureVocab(db) {
     )
     .run();
 
+  const columns = await db.prepare("PRAGMA table_info(vocab_words)").all();
+  const hasContextZh = (columns.results ?? []).some((column) => column.name === "context_zh");
+  if (!hasContextZh) {
+    await db.prepare("ALTER TABLE vocab_words ADD COLUMN context_zh TEXT").run();
+  }
+
   const settings = await db.prepare("SELECT id FROM vocab_settings WHERE id = 1").first();
   if (!settings) {
     await db
@@ -50,8 +57,8 @@ export async function ensureVocab(db) {
   for (const word of WORDS) {
     await db
       .prepare(
-        `INSERT INTO vocab_words (id, term, phonetic, pos, meaning, grammar, context_kind, context_title, context_body, topic)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `INSERT INTO vocab_words (id, term, phonetic, pos, meaning, grammar, context_kind, context_title, context_body, context_zh, topic)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
          ON CONFLICT(id) DO UPDATE SET
            term = excluded.term,
            phonetic = excluded.phonetic,
@@ -61,6 +68,7 @@ export async function ensureVocab(db) {
            context_kind = excluded.context_kind,
            context_title = excluded.context_title,
            context_body = excluded.context_body,
+           context_zh = excluded.context_zh,
            topic = excluded.topic`
       )
       .bind(
@@ -73,6 +81,7 @@ export async function ensureVocab(db) {
         word.contextKind,
         word.contextTitle,
         word.contextBody,
+        word.contextZh,
         word.topic
       )
       .run();
@@ -249,6 +258,7 @@ function serializeWord(row, day) {
     contextKind: row.context_kind,
     contextTitle: row.context_title,
     contextBody: row.context_body,
+    contextZh: row.context_zh,
     topic: row.topic,
     stage: row.stage,
     dueOn: row.due_on,
