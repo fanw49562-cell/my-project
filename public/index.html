@@ -247,8 +247,115 @@
 
       .top-actions {
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
         margin-bottom: 10px;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 8px;
+      }
+
+      .tabs button[aria-selected="true"] {
+        background: var(--accent);
+        color: #1a1410;
+        border-color: transparent;
+      }
+
+      .vocab-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 16px;
+        align-items: center;
+        margin-bottom: 16px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .vocab-meta label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .vocab-meta select {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 6px 10px;
+        background: rgba(26, 20, 16, 0.55);
+        color: var(--ink);
+        font: inherit;
+      }
+
+      .word-card {
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+      }
+
+      .word-card.done {
+        opacity: 0.72;
+      }
+
+      .word-head {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 12px;
+        align-items: baseline;
+      }
+
+      .word-head strong {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 28px;
+        font-weight: 600;
+      }
+
+      .tag {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 2px 8px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .word-card p {
+        margin: 8px 0 0;
+        line-height: 1.7;
+        color: var(--muted);
+      }
+
+      .word-card p.meaning,
+      .word-card .passage {
+        color: var(--ink);
+      }
+
+      .passage {
+        margin-top: 10px;
+        padding: 12px 14px;
+        border-radius: 16px;
+        background: rgba(26, 20, 16, 0.45);
+        line-height: 1.75;
+      }
+
+      .passage mark {
+        background: rgba(255, 106, 61, 0.28);
+        color: inherit;
+        padding: 0 2px;
+        border-radius: 4px;
+      }
+
+      .grades {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .grades button {
+        font-size: 13px;
+        padding: 8px 12px;
       }
 
       @keyframes pulse {
@@ -278,9 +385,38 @@
 
         <section id="app" class="hidden">
           <div class="top-actions">
+            <div class="tabs">
+              <button class="ghost" id="tab-vocab" type="button" aria-selected="true">单词</button>
+              <button class="ghost" id="tab-diary" type="button" aria-selected="false">日记</button>
+            </div>
             <button class="ghost" id="logout" type="button">离开</button>
           </div>
-          <section class="card">
+          <section class="card" id="panel-vocab">
+            <div class="status"><span class="dot"></span> 遗忘曲线</div>
+            <h1>今日单词</h1>
+            <p class="date" id="vocab-date"></p>
+            <p class="lead">财务与信息化英文。每天推送新词和到期复习；先每周 20 个，以后可改。</p>
+            <div class="vocab-meta">
+              <label>
+                每周新词
+                <select id="weekly-new">
+                  <option value="10">10</option>
+                  <option value="15">15</option>
+                  <option value="20" selected>20</option>
+                  <option value="25">25</option>
+                  <option value="30">30</option>
+                  <option value="40">40</option>
+                </select>
+              </label>
+              <span id="vocab-stats"></span>
+            </div>
+            <h2 class="history" style="margin: 8px 0 0; font-size: 16px;">今天新学</h2>
+            <div id="new-words"></div>
+            <h2 class="history" style="margin: 22px 0 0; font-size: 16px;">今天复习</h2>
+            <div id="review-words"></div>
+            <p class="status-msg" id="vocab-msg"></p>
+          </section>
+          <section class="card hidden" id="panel-diary">
             <div class="status"><span class="dot"></span> 今天记下</div>
             <h1>今日一句</h1>
             <p class="date" id="today-label"></p>
@@ -304,7 +440,7 @@
             </div>
             <p class="status-msg" id="app-msg"></p>
           </section>
-          <section class="history">
+          <section class="history hidden" id="panel-history">
             <h2>以前记下的</h2>
             <div id="history"></div>
           </section>
@@ -323,6 +459,17 @@
       const appMsg = document.getElementById("app-msg");
       const history = document.getElementById("history");
       const todayLabel = document.getElementById("today-label");
+      const vocabDate = document.getElementById("vocab-date");
+      const vocabStats = document.getElementById("vocab-stats");
+      const vocabMsg = document.getElementById("vocab-msg");
+      const weeklyNew = document.getElementById("weekly-new");
+      const newWords = document.getElementById("new-words");
+      const reviewWords = document.getElementById("review-words");
+      const panelVocab = document.getElementById("panel-vocab");
+      const panelDiary = document.getElementById("panel-diary");
+      const panelHistory = document.getElementById("panel-history");
+      const tabVocab = document.getElementById("tab-vocab");
+      const tabDiary = document.getElementById("tab-diary");
 
       const jsonHeaders = { "Content-Type": "application/json" };
 
@@ -414,7 +561,157 @@
         gate.classList.add("hidden");
         app.classList.remove("hidden");
         render(state);
+        await loadVocab();
         return state;
+      }
+
+      function showTab(name) {
+        const vocab = name === "vocab";
+        tabVocab.setAttribute("aria-selected", vocab ? "true" : "false");
+        tabDiary.setAttribute("aria-selected", vocab ? "false" : "true");
+        panelVocab.classList.toggle("hidden", !vocab);
+        panelDiary.classList.toggle("hidden", vocab);
+        panelHistory.classList.toggle("hidden", vocab);
+      }
+
+      function kindLabel(kind) {
+        if (kind === "news") return "新闻语境";
+        if (kind === "speech") return "演讲语境";
+        return "故事语境";
+      }
+
+      function topicLabel(topic) {
+        return topic === "finance" ? "财务" : "信息化";
+      }
+
+      function highlight(text, term) {
+        const fragment = document.createDocumentFragment();
+        const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const parts = text.split(new RegExp("(" + escaped + ")", "ig"));
+        for (const part of parts) {
+          if (part.toLowerCase() === term.toLowerCase()) {
+            const mark = document.createElement("mark");
+            mark.textContent = part;
+            fragment.append(mark);
+          } else {
+            fragment.append(part);
+          }
+        }
+        return fragment;
+      }
+
+      function wordCard(word, mode) {
+        const card = document.createElement("article");
+        card.className = "word-card" + (word.done ? " done" : "");
+
+        const head = document.createElement("div");
+        head.className = "word-head";
+        const title = document.createElement("strong");
+        title.textContent = word.term;
+        const phonetic = document.createElement("span");
+        phonetic.textContent = word.phonetic || "";
+        const pos = document.createElement("span");
+        pos.className = "tag";
+        pos.textContent = word.pos || "";
+        const topic = document.createElement("span");
+        topic.className = "tag";
+        topic.textContent = topicLabel(word.topic);
+        head.append(title, phonetic, pos, topic);
+
+        const meaning = document.createElement("p");
+        meaning.className = "meaning";
+        meaning.textContent = word.meaning;
+
+        const grammar = document.createElement("p");
+        grammar.textContent = "语法：" + (word.grammar || "");
+
+        const context = document.createElement("p");
+        context.textContent = kindLabel(word.contextKind) + " · " + (word.contextTitle || "");
+
+        const passage = document.createElement("div");
+        passage.className = "passage";
+        passage.append(highlight(word.contextBody || "", word.term));
+
+        card.append(head, meaning, grammar, context, passage);
+
+        if (!word.done) {
+          const grades = document.createElement("div");
+          grades.className = "grades";
+          const options = [
+            ["again", "没记住"],
+            ["hard", "有印象"],
+            ["good", "记住了"],
+            ["easy", "很熟"],
+          ];
+          for (const [grade, label] of options) {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = grade === "good" ? "primary" : "ghost";
+            button.textContent = label;
+            button.addEventListener("click", () => gradeWord(word.id, grade));
+            grades.append(button);
+          }
+          card.append(grades);
+        } else {
+          const done = document.createElement("p");
+          done.textContent = mode === "new" ? "今天已学，下次按遗忘曲线再出现。" : "今天已复习。";
+          card.append(done);
+        }
+        return card;
+      }
+
+      function renderVocab(data) {
+        vocabDate.textContent = formatDay(data.day);
+        weeklyNew.value = String(data.weeklyNew);
+        vocabStats.textContent =
+          "本周已学 " +
+          data.introducedThisWeek +
+          " / " +
+          data.weeklyNew +
+          " · 词库 " +
+          data.bankSize +
+          " 个";
+
+        newWords.replaceChildren();
+        if (!data.newWords.length) {
+          const empty = document.createElement("p");
+          empty.className = "empty";
+          empty.textContent = "今天没有新词，或本周额度已经用完。";
+          newWords.append(empty);
+        } else {
+          for (const word of data.newWords) newWords.append(wordCard(word, "new"));
+        }
+
+        reviewWords.replaceChildren();
+        if (!data.reviewWords.length) {
+          const empty = document.createElement("p");
+          empty.className = "empty";
+          empty.textContent = "今天没有到期复习。坚持几天后，这里会按 1、2、4、7 天出现。";
+          reviewWords.append(empty);
+        } else {
+          for (const word of data.reviewWords) reviewWords.append(wordCard(word, "review"));
+        }
+      }
+
+      async function loadVocab() {
+        const data = await api("/api/vocab");
+        renderVocab(data);
+        return data;
+      }
+
+      async function gradeWord(wordId, grade) {
+        setMsg(vocabMsg, "正在记下复习结果…");
+        try {
+          const data = await api("/api/vocab/review", {
+            method: "POST",
+            headers: jsonHeaders,
+            body: JSON.stringify({ wordId, grade }),
+          });
+          renderVocab(data);
+          setMsg(vocabMsg, "已按遗忘曲线安排下次出现。");
+        } catch (error) {
+          setMsg(vocabMsg, error.message, true);
+        }
       }
 
       async function compressImage(file) {
@@ -512,6 +809,25 @@
         gate.classList.remove("hidden");
         document.getElementById("code").value = "";
         setMsg(gateMsg, "");
+        setMsg(vocabMsg, "");
+      });
+
+      tabVocab.addEventListener("click", () => showTab("vocab"));
+      tabDiary.addEventListener("click", () => showTab("diary"));
+
+      weeklyNew.addEventListener("change", async () => {
+        setMsg(vocabMsg, "正在保存每周额度…");
+        try {
+          const data = await api("/api/vocab/settings", {
+            method: "PUT",
+            headers: jsonHeaders,
+            body: JSON.stringify({ weeklyNew: Number(weeklyNew.value) }),
+          });
+          renderVocab(data);
+          setMsg(vocabMsg, "以后每周按这个数量安排新词。今天已抽出的词会保留。");
+        } catch (error) {
+          setMsg(vocabMsg, error.message, true);
+        }
       });
 
       sentence.addEventListener("input", updateCount);

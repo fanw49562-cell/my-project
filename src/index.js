@@ -1,3 +1,5 @@
+import { ensureVocab, getVocab, reviewWord, updateVocabSettings } from "./vocab.js";
+
 const COOKIE = "daily_session";
 const MAX_SENTENCE = 500;
 const MAX_PHOTO = 5 * 1024 * 1024;
@@ -27,9 +29,32 @@ export default {
       }
 
       await ensureSchema(env.DB);
+      await ensureVocab(env.DB);
 
       if (url.pathname === "/api/state" && request.method === "GET") {
         return getState(env);
+      }
+
+      if (url.pathname === "/api/vocab" && request.method === "GET") {
+        return Response.json(await getVocab(env));
+      }
+
+      if (url.pathname === "/api/vocab/review" && request.method === "POST") {
+        const body = await readJson(request);
+        try {
+          return Response.json(await reviewWord(env, String(body.wordId ?? ""), body.grade));
+        } catch (error) {
+          return json({ error: error.message }, error.status || 400);
+        }
+      }
+
+      if (url.pathname === "/api/vocab/settings" && request.method === "PUT") {
+        const body = await readJson(request);
+        try {
+          return Response.json(await updateVocabSettings(env, body.weeklyNew));
+        } catch (error) {
+          return json({ error: error.message }, error.status || 400);
+        }
       }
 
       if (url.pathname === "/api/sentence" && request.method === "PUT") {
